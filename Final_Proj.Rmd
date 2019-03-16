@@ -1,0 +1,57 @@
+---
+title: "Final Project"
+author: "Ashton Pallottini"
+date: "April 20, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(moments)
+library(e1071)
+```
+
+
+```{r}
+er.data <- read.csv("data.csv", header = TRUE, stringsAsFactors = FALSE, na.strings = "")
+head(er.data)
+```
+
+```{r}
+summary(er.data$Log.Return)
+var(er.data$Log.Return, na.rm = TRUE)
+skewness(er.data$Log.Return, na.rm = TRUE)
+kurtosis(er.data$Log.Return, na.rm = TRUE)
+moment(er.data$Log.Return, order = 3, center = TRUE, na.rm = TRUE)
+```
+
+```{r}
+second.moment <- (er.data$Log.Return + .0001425)^2
+third.moment <- (er.data$Log.Return + .0001425)^3
+fourth.moment <- (er.data$Log.Return + .0001425)^4
+
+a <- sum(second.moment, na.rm = TRUE)/6333
+b <- sum(third.moment, na.rm = TRUE)/6333
+c <- sum(fourth.moment, na.rm = TRUE)/6333
+
+b/((4.374752*10^-5)^(3/2)) #skew
+c/((4.374752*10^-5)^2) #kurt
+```
+
+```{r}
+acf(er.data$Log.Return, type = "correlation", na.action = na.pass, plot = T, lag.max = 80, main = "Autocorrelation of Log Returns", ylab = "Correlation")
+
+acf(er.data$Absolute.LR, type = "correlation", na.action = na.pass, plot = T, lag.max = 80, main = "Autocorrelation of Absolute Log Returns", ylab = "Correlation")
+```
+
+```{r}
+mean(er.data$Absolute.LR, na.rm = T)
+var(er.data$Absolute.LR, na.rm = T)
+```
+```{r}
+hist(er.data$Log.Return, main = "Histogram of Log Returns", xlab = "Log Returns")
+```
+
